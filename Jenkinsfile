@@ -97,10 +97,10 @@ pipeline{
 
         stage('Update Deployment File') {
 
-            steps {
-                    sh 'echo passed'
-                    git branch: 'main', url: 'https://gitlab.com/sushank3/ci_cd-portfolio.git'
-                }
+            // steps {
+            //         sh 'echo passed'
+            //         git branch: 'main', url: 'https://gitlab.com/sushank3/ci_cd-portfolio.git'
+            //     }
 
             // stage('Checkout') {
             //     steps {
@@ -115,6 +115,8 @@ pipeline{
             }
         
             steps {
+                sh 'echo passed'
+                git branch: 'main', url: 'https://gitlab.com/sushank3/ci_cd-portfolio.git'
                 withCredentials([string(credentialsId: 'gitlab-token', variable: 'GITLAB_TOKEN')]) {
                     sh '''
                         git config user.email "sushankkr3@gmail.com"
