@@ -98,12 +98,12 @@ pipeline{
         stage('Update Deployment File') {
 
             environment {
-                GIT_REPO_NAME = "CI_CD-portfolio"
-                GIT_USER_NAME = "sushank3"
+                GITLAB_PROJECT_NAME = "CI_CD-portfolio"
+                GITLAB_USERNAME = "sushank3"
             }
         
             steps {
-                withCredentials([string(credentialsId: 'gitlab-token', variable: 'GITlab_TOKEN')]) {
+                withCredentials([string(credentialsId: 'gitlab-token', variable: 'GITLAB_TOKEN')]) {
                     sh '''
                         git config user.email "sushankkr3@gmail.com"
                         git config user.name "sushank3"
@@ -116,7 +116,8 @@ pipeline{
                         
                         git commit -m "Update deployment image to version ${BUILD_NUMBER}"
                         
-                        git push https://${GITlab_TOKEN}@gitlab.com/${GIT_USER_NAME}/${GIT_REPO_NAME} HEAD:main
+                        git push "https://oauth2:${GITLAB_TOKEN}@gitlab.com/${GITLAB_USERNAME}/${GITLAB_PROJECT_NAME}" HEAD:main
+
 
                     '''
 
