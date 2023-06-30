@@ -103,25 +103,25 @@ pipeline{
             }
         
             steps {
-                withCredentials([string(credentialsId: 'github-token', variable: 'GITHUB_TOKEN')]) {
+                withCredentials([string(credentialsId: 'gitlab-token', variable: 'GITLAB_TOKEN')]) {
                     sh '''
                         git config user.email "sushankkr3@gmail.com"
                         git config user.name "Sushank Kumar"
                         
                         BUILD_NUMBER="${BUILD_NUMBER}"
 
-                        CURRENT_IMAGE_VERSION=$(grep -oE 'sushank3/ci_cd-portfolio:v[0-9]+' k8s_manifests/deployment.yaml | cut -d':' -f2)
+                        CURRENT_IMAGE_VERSION=$(grep -oE 'sushank3/ci_cd-portfolio:v[0-9]+' deployment.yaml | cut -d':' -f2)
 
                         
 
-                        sed -i "s/${CURRENT_IMAGE_VERSION}/v${BUILD_NUMBER}/g" k8s_manifests/deployment.yaml
+                        sed -i "s/${CURRENT_IMAGE_VERSION}/v${BUILD_NUMBER}/g" deployment.yaml
                         
                     
-                        git add k8s_manifests/deployment.yaml
+                        git add deployment.yaml
                         
                         git commit -m "Update deployment image to version ${BUILD_NUMBER}"
                         
-                        git push https://${GITHUB_TOKEN}@github.com/${GIT_USER_NAME}/${GIT_REPO_NAME} HEAD:main
+                        git push https://${GITLAB_TOKEN}@github.com/${GIT_USER_NAME}/${GIT_REPO_NAME} HEAD:main
                     
                     '''
                 }
@@ -129,7 +129,7 @@ pipeline{
                 script {
                     slackSend(
                         color: '#36a64f',  
-                        message: "Build ${env.BUILD_NUMBER} succeeded!",  
+                        message: "Final Build ${env.BUILD_NUMBER} succeeded! and deployment file updated with new version",  
                         tokenCredentialId: 'slack-jenkins'  
                     )
                 }
