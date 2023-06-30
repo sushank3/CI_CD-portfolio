@@ -103,28 +103,47 @@ pipeline{
             }
         
             steps {
-                withCredentials([string(credentialsId: 'gitlab-token', variable: 'GITLAB_TOKEN')]) {
+                withCredentials([string(credentialsId: 'gitlab-token', variable: 'GITlab_TOKEN')]) {
                     sh '''
                         git config user.email "sushankkr3@gmail.com"
-                        git config user.name "Sushank Kumar"
+                        git config user.name "sushank3"
                         
                         BUILD_NUMBER="${BUILD_NUMBER}"
 
                         CURRENT_IMAGE_VERSION=$(grep -oE 'sushank3/ci_cd-portfolio:v[0-9]+' deployment.yaml | cut -d':' -f2)
-
-                        
-
                         sed -i "s/${CURRENT_IMAGE_VERSION}/v${BUILD_NUMBER}/g" deployment.yaml
-                        
-                    
                         git add deployment.yaml
                         
                         git commit -m "Update deployment image to version ${BUILD_NUMBER}"
                         
-                        git push https://${GITLAB_TOKEN}@github.com/${GIT_USER_NAME}/${GIT_REPO_NAME} HEAD:main
-                    
+                        git push https://${GITlab_TOKEN}@gitlab.com/${GIT_USER_NAME}/${GIT_REPO_NAME} HEAD:main
+
                     '''
+
                 }
+
+                // withCredentials([string(credentialsId: 'github-token', variable: 'GITHUB_TOKEN')]) {
+                //     sh '''
+                //         git config user.email "sushankkr3@gmail.com"
+                //         git config user.name "Sushank Kumar"
+                        
+                //         BUILD_NUMBER="${BUILD_NUMBER}"
+
+                //         // CURRENT_IMAGE_VERSION=$(grep -oE 'sushank3/ci_cd-portfolio:v[0-9]+' deployment.yaml | cut -d':' -f2)
+
+                        
+
+                //         sed -i "s/${CURRENT_IMAGE_VERSION}/v${BUILD_NUMBER}/g" deployment.yaml
+                        
+                    
+                //         git add deployment.yaml
+                        
+                //         git commit -m "Update deployment image to version ${BUILD_NUMBER}"
+                        
+                //         git push https://${GITHUB_TOKEN}@github.com/${GIT_USER_NAME}/${GIT_REPO_NAME} HEAD:main
+                    
+                //     '''
+                // }
 
                 script {
                     slackSend(
