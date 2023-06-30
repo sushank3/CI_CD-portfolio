@@ -97,6 +97,18 @@ pipeline{
 
         stage('Update Deployment File') {
 
+            steps {
+                    sh 'echo passed'
+                    git branch: 'main', url: 'https://gitlab.com/sushank3/ci_cd-portfolio.git'
+                }
+
+            // stage('Checkout') {
+            //     steps {
+            //         sh 'echo passed'
+            //         git branch: 'main', url: 'https://gitlab.com/sushank3/ci_cd-portfolio.git'
+            //     }
+            // }
+
             environment {
                 GITLAB_PROJECT_NAME = "CI_CD-portfolio"
                 GITLAB_USERNAME = "sushank3"
