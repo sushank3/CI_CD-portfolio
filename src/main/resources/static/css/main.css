@@ -11,7 +11,7 @@ body {
 }
 
 header {
-  background-color: hsl(276, 72%, 36%);
+  background-color: hsla(202, 94%, 35%, 0.945);
   height: 100vh;
 }
 
