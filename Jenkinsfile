@@ -7,7 +7,6 @@ pipeline{
         stage('Build and Test') {
             steps {
                 sh 'ls -ltr'
-                // build the project and create a JAR file
                 sh 'mvn clean package'
 
                 
@@ -37,7 +36,6 @@ pipeline{
                 echo "========Start Testing========"
                 
                 withCredentials([string(credentialsId: 'sonarqube', variable: 'SONAR_AUTH_TOKEN')]) {
-                    // sh 'sonar:sonar -Dsonar.login=$SONAR_AUTH_TOKEN -Dsonar.host.url=${SONAR_URL}'
                     sh 'mvn sonar:sonar -Dsonar.login=$SONAR_AUTH_TOKEN -Dsonar.host.url=${SONAR_URL}'
                     
                 }
@@ -72,7 +70,6 @@ pipeline{
 
             environment {
                 DOCKER_IMAGE = "sushank3/ci_cd-portfolio:v${BUILD_NUMBER}"
-                // DOCKERFILE_LOCATION = "java-maven-sonar-argocd-helm-k8s/spring-boot-app/Dockerfile"
                 REGISTRY_CREDENTIALS = credentials('docker_hub')
             
             }
@@ -96,18 +93,6 @@ pipeline{
         }
 
         stage('Update Deployment File') {
-
-            // steps {
-            //         sh 'echo passed'
-            //         git branch: 'main', url: 'https://gitlab.com/sushank3/ci_cd-portfolio.git'
-            //     }
-
-            // stage('Checkout') {
-            //     steps {
-            //         sh 'echo passed'
-            //         git branch: 'main', url: 'https://gitlab.com/sushank3/ci_cd-portfolio.git'
-            //     }
-            // }
 
             environment {
                 GITLAB_PROJECT_NAME = "CI_CD-portfolio"
@@ -136,29 +121,6 @@ pipeline{
                     '''
 
                 }
-
-                // withCredentials([string(credentialsId: 'github-token', variable: 'GITHUB_TOKEN')]) {
-                //     sh '''
-                //         git config user.email "sushankkr3@gmail.com"
-                //         git config user.name "Sushank Kumar"
-                        
-                //         BUILD_NUMBER="${BUILD_NUMBER}"
-
-                //         // CURRENT_IMAGE_VERSION=$(grep -oE 'sushank3/ci_cd-portfolio:v[0-9]+' deployment.yaml | cut -d':' -f2)
-
-                        
-
-                //         sed -i "s/${CURRENT_IMAGE_VERSION}/v${BUILD_NUMBER}/g" deployment.yaml
-                        
-                    
-                //         git add deployment.yaml
-                        
-                //         git commit -m "Update deployment image to version ${BUILD_NUMBER}"
-                        
-                //         git push https://${GITHUB_TOKEN}@github.com/${GIT_USER_NAME}/${GIT_REPO_NAME} HEAD:main
-                    
-                //     '''
-                // }
 
                 script {
                     slackSend(
